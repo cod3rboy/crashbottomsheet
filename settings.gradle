@@ -1,0 +1,3 @@
+rootProject.name='CrashBottomSheetExample'
+include ':app'
+include ':crashbottomsheet'

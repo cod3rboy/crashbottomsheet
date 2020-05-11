@@ -1,0 +1,6 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.cod3rboy.crashbottomsheet">
+    <application>
+        <activity android:name=".CrashActivity" android:theme="@style/TransparentActivity"/>
+    </application>
+</manifest>

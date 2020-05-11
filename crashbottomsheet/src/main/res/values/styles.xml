@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TransparentActivity" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+    </style>
+
+    <style name="CBSTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <item name="colorPrimary">#388E3C</item>
+        <item name="colorSecondary">#2E7D32</item>
+        <item name="colorAccent">#03DAC6</item>
+    </style>
+</resources>

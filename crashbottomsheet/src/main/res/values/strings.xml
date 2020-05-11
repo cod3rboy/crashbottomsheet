@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CrashBottomSheet</string>
+    <string name="cbs_title" translatable="true">@string/app_name</string>
+    <string name="cbs_description" translatable="true">Test App has crashed!\nPlease take a moment to report crash and help developers to improve this app.</string>
+    <string name="cbs_btn_positive" translatable="true">Report</string>
+    <string name="cbs_btn_negative" translatable="true">Cancel</string>
+    <string name="cbs_drawable_description">Sad Panda</string>
+    <string name="cbs_report_email_to">cod3rboy@hotmail.com</string>
+    <string name="cbs_report_email_subject">Crash Report</string>
+    <string name="cbs_email_body_format">### DO NOT DELETE BELOW INFORMATION ###\n%s - Crash Report\n---DEVICE INFO---\n%s\n\n---STACKTRACE---\n%s</string>
+    <string name="cbs_toast_no_email_app">No email app found on device.</string>
+</resources>

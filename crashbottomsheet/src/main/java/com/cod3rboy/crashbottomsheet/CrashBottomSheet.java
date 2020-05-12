@@ -22,6 +22,7 @@ public class CrashBottomSheet implements Thread.UncaughtExceptionHandler {
     static final String LOG_TAG = CrashBottomSheet.class.getSimpleName();
 
     static String EXTRA_STACK_TRACE = "extra_stack_trace";
+    private static final int STACK_TRACE_CHARS_LIMIT = (127 * 1024) / 2; // 127 KB Limit
 
     public interface onCrashReport {
         void handleCrashReport(String stackTrace, DeviceInfo deviceInfo);
@@ -124,6 +125,14 @@ public class CrashBottomSheet implements Thread.UncaughtExceptionHandler {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+
+        // Limit stacktrace content to avoid TransactionTooLargeException.
+        // See : https://developer.android.com/reference/android/os/TransactionTooLargeException.html
+        if (stackTrace.length() > STACK_TRACE_CHARS_LIMIT) {
+            String marker = " <TRUNCATED! STACK TRACE IS TOO LARGE>";
+            stackTrace = stackTrace.substring(0, STACK_TRACE_CHARS_LIMIT - marker.length()) + marker;
+        }
+
         Intent i = new Intent(mAppContext, com.cod3rboy.crashbottomsheet.CrashActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         i.putExtra(EXTRA_STACK_TRACE, stackTrace);

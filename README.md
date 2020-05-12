@@ -26,23 +26,6 @@ dependencies {
 }
 ```
 
-## Maven Setup
-
-```xml
-<!-- <repositories> section of pom.xml -->
-<repository>
-    <id>jitpack.io</id>
-   <url>https://jitpack.io</url>
-</repository>
-
-<!-- <dependencies> section of pom.xml -->
-<dependency>
-    <groupId>com.github.dkchalotra</groupId>
-    <artifactId>crashbottomsheet</artifactId>
-    <version>v1.0.0</version>
-</dependency>
-```
-
 ## CrashBottomSheet - Usage
 
 * Create a custom Application class

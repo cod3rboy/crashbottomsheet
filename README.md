@@ -174,7 +174,7 @@ limitations under the License.
 
 You contribution will be welcomed to make this library better
 
-## Acknowledgement :thumsup:
+## Acknowledgement :thumbsup:
 
 Sad Panda image used in library is taken from this link [Sad Panda Vector](https://publicdomainvectors.org/en/free-clipart/Sad-panda-drawing/80468.html).
 

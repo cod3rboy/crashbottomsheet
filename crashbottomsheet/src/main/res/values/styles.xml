@@ -11,6 +11,7 @@
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
     </style>
 
+    <!--BottomSheetDialog Theme-->
     <style name="CBSTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
         <item name="colorPrimary">#388E3C</item>
         <item name="colorSecondary">#2E7D32</item>

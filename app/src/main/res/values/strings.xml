@@ -1,3 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
 <resources>
     <string name="app_name">CrashBottomSheetExample</string>
+
+    <!--Override CrashBottomSheet strings-->
+    <string name="cbs_title">@string/app_name</string>
+    <string name="cbs_description">CrashBottomSheetExample has crashed!\nPlease report this crash immediately.</string>
+    <string name="cbs_btn_positive">Report Crash</string>
+    <string name="cbs_btn_negative">Do Nothing</string>
+    <string name="cbs_report_email_to">myemailid@somemail.com</string>
+    <string name="cbs_report_email_subject">CrashBottomSheetExample - Crash Report</string>
+    <string name="cbs_toast_no_email_app">You have not installed any email app to send crash report email.</string>
+    <!--End Override CrashBottomSheet strings-->
 </resources>

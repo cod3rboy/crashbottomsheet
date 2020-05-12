@@ -6,33 +6,36 @@ import android.content.pm.PackageInfo;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import java.lang.reflect.Field;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
+/**
+ * Class to store information about device on which crash occurs.
+ */
 public class DeviceInfo {
-    private String mAppName;
-    private String mPackageName;
-    private String mAndroidCodeName;
-    private String mAndroidVersion;
-    private String mManufacturer;
-    private String mModel;
-    private String mBrand;
-    private String mProduct;
-    private String mAPKBuildDate;
-    private String mAPKVersion;
+    private String mAppName; // Android application name
+    private String mPackageName; // Application package name
+    private String mAndroidCodeName; // Android OS code name e.g. Lollipop
+    private String mAndroidVersion; // Android OS version name e.g. 5.1
+    private String mManufacturer; // Device Manufacturer
+    private String mModel; // Device Model
+    private String mBrand; // Device Brand
+    private String mProduct; // Device Product
+    private String mAPKVersion; // Installed app APK version name
 
-    public DeviceInfo(Context context) {
+    /**
+     * Constructor
+     *
+     * @param context application context object̥
+     */
+    DeviceInfo(Context context) {
+        // Get app name
         ApplicationInfo applicationInfo = context.getApplicationInfo();
         int stringId = applicationInfo.labelRes;
         mAppName = stringId == 0 ? applicationInfo.nonLocalizedLabel.toString() : context.getString(stringId);
+        // Get app package name
         mPackageName = context.getPackageName();
+        // Get android code name
         String codeName = "UNKNOWN";
         for (Field field : Build.VERSION_CODES.class.getFields()) {
             try {
@@ -45,59 +48,118 @@ public class DeviceInfo {
             }
         }
         mAndroidCodeName = codeName;
+        // Get android version
         mAndroidVersion = Build.VERSION.RELEASE;
+        // Get manufacturer name
         mManufacturer = Build.MANUFACTURER;
+        // Get device model
         mModel = Build.MODEL;
+        // Get device brand
         mBrand = Build.BRAND;
+        // Get device product
         mProduct = Build.PRODUCT;
-        mAPKBuildDate = getAPKBuildDateAsString(context, new SimpleDateFormat("EEE, dd-MMM-yyyy, HH:mm:ss", Locale.getDefault()));
+        // Get install app apk version name
         mAPKVersion = getAPKVersionName(context);
     }
 
+    /**
+     * Returns Application name
+     *
+     * @return App Name
+     */
     public String getAppName() {
         return mAppName;
     }
 
+    /**
+     * Returns package name of application
+     *
+     * @return App Package Name
+     */
     public String getPackageName() {
         return mPackageName;
     }
 
+    /**
+     * Returns code name of installed Android OS e.g. M, L, Q, etc.
+     *
+     * @return Android OS codename
+     */
     public String getAndroidCodeName() {
         return mAndroidCodeName;
     }
 
+    /**
+     * Returns installed android os version e.g. 5.0, 6.0, 7.1.1, etc.
+     *
+     * @return Android OS version
+     */
     public String getAndroidVersion() {
         return mAndroidVersion;
     }
 
+    /**
+     * Returns name of manufacturer of device.
+     *
+     * @return Manufacturer name
+     */
     public String getManufacturer() {
         return mManufacturer;
     }
 
+    /**
+     * Returns model name of device
+     *
+     * @return Model name
+     */
     public String getModel() {
         return mModel;
     }
 
+    /**
+     * Returns brand name of device
+     *
+     * @return Brand name
+     */
     public String getBrand() {
         return mBrand;
     }
 
+    /**
+     * Returns product name of device
+     *
+     * @return Product name
+     */
     public String getProduct() {
         return mProduct;
     }
 
-    public String getAPKBuildDate() {
-        return mAPKBuildDate;
-    }
-
+    /**
+     * Returns app version name of installed APK
+     *
+     * @return APK version name
+     */
     public String getAPKVersion() {
         return mAPKVersion;
     }
 
+    /**
+     * Returns formatted string with all device information.
+     * Format :-
+     * Application Name : [value]
+     * Package Name : [value]
+     * APK Version Name : [value]
+     * Android OS : [android codename]-[android version]
+     * Manufacturer : [value]
+     * Model : [value]
+     * Brand : [value]
+     * Product : [value]
+     *
+     * @return Formatted device information
+     */
     public String getFormattedInfo() {
         return "Application Name : " + mAppName +
-                "\nPackage name : " + mPackageName +
-                "\nAPK Build Date " + mAPKBuildDate +
+                "\nPackage Name : " + mPackageName +
                 "\nAPK Version Name : " + mAPKVersion +
                 "\nAndroid OS : " + mAndroidCodeName + "-" + mAndroidVersion +
                 "\nManufacturer : " + mManufacturer +
@@ -107,47 +169,16 @@ public class DeviceInfo {
     }
 
     /**
-     * INTERNAL method that returns the build date of the current APK as a string, or null if unable to determine it.
+     * Method to determine version name of installed APK.
      *
-     * @param context    A valid context. Must not be null.
-     * @param dateFormat DateFormat to use to convert from Date to String
-     * @return The formatted date, or "Unknown" if unable to determine it.
-     */
-    @Nullable
-    private static String getAPKBuildDateAsString(@NonNull Context context, @NonNull DateFormat dateFormat) {
-        long buildDate;
-        try {
-            ApplicationInfo ai = context.getPackageManager().getApplicationInfo(context.getPackageName(), 0);
-            ZipFile zf = new ZipFile(ai.sourceDir);
-
-            //If this failed, try with the old zip method
-            ZipEntry ze = zf.getEntry("classes.dex");
-            buildDate = ze.getTime();
-
-
-            zf.close();
-        } catch (Exception e) {
-            buildDate = 0;
-        }
-
-        if (buildDate > 312764400000L) {
-            return dateFormat.format(new Date(buildDate));
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * INTERNAL method that returns the version name of the current app, or null if unable to determine it.
-     *
-     * @param context A valid context. Must not be null.
-     * @return The version name, or "Unknown if unable to determine it.
+     * @param context A Context Object
+     * @return Version Name or Unknown if fails
      */
     @NonNull
     private static String getAPKVersionName(Context context) {
         try {
-            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-            return packageInfo.versionName;
+            PackageInfo pi = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            return pi.versionName;
         } catch (Exception e) {
             return "Unknown";
         }

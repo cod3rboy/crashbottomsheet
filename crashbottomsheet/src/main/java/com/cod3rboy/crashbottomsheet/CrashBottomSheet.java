@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -28,13 +29,15 @@ public class CrashBottomSheet implements Thread.UncaughtExceptionHandler {
         void handleCrashReport(String stackTrace, DeviceInfo deviceInfo);
     }
 
-    private static CrashBottomSheet mSingleton;
-
-    private static Thread.UncaughtExceptionHandler mOldHandler;
-
-    private static long MS_BETWEEN_CRASHES = 3000; // 3 seconds gap after any crash is needed
+    private static final long MIN_MS_BETWEEN_CRASHES = 3000; // 3 seconds gap after any crash is needed
     private static final String PREFERENCE_FILE_NAME = "com.cod3rboy.crashbottomsheet";
     private static final String PREFERENCE_FIELD_NAME = "last_crash_time";
+
+
+    private static long mMinCrashIntervalMs = MIN_MS_BETWEEN_CRASHES;
+    private static CrashBottomSheet mSingleton;
+    private static Thread.UncaughtExceptionHandler mOldHandler;
+
 
     public static void register(Application appContext, onCrashReport reportCallback) {
         if (mSingleton == null) {
@@ -53,6 +56,14 @@ public class CrashBottomSheet implements Thread.UncaughtExceptionHandler {
 
     public static void register(Application appContext) {
         register(appContext, null);
+    }
+
+    public static void setMinCrashIntervalMs(long ms) {
+        if (ms < MIN_MS_BETWEEN_CRASHES) {
+            // Ignore too small values
+        } else {
+            mMinCrashIntervalMs = ms;
+        }
     }
 
     public static void sendCrashEmail(Context context, String stackTrace, DeviceInfo deviceInfo) {
@@ -78,6 +89,7 @@ public class CrashBottomSheet implements Thread.UncaughtExceptionHandler {
                     intent.putExtra(Intent.EXTRA_TEXT,
                             String.format(Locale.getDefault(), context.getString(R.string.cbs_email_body_format),
                                     context.getString(R.string.app_name),
+                                    new SimpleDateFormat("EEE, dd-MMM-yyyy, HH:mm:ss", Locale.getDefault()).format(new Date()),
                                     deviceInfo.getFormattedInfo(),
                                     stackTrace));
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -144,7 +156,7 @@ public class CrashBottomSheet implements Thread.UncaughtExceptionHandler {
     private boolean isErrorLoopPossible() {
         long now = new Date().getTime();
         long lastCrash = getLastCrashTimestamp();
-        return (now - lastCrash) <= MS_BETWEEN_CRASHES;
+        return (now - lastCrash) <= mMinCrashIntervalMs;
     }
 
     private void setCurrentCrashTimestamp() {

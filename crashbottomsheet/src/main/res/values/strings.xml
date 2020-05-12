@@ -8,6 +8,6 @@
     <string name="cbs_drawable_description">Sad Panda</string>
     <string name="cbs_report_email_to">cod3rboy@hotmail.com</string>
     <string name="cbs_report_email_subject">Crash Report</string>
-    <string name="cbs_email_body_format">### DO NOT DELETE BELOW INFORMATION ###\n%s - Crash Report\n---DEVICE INFO---\n%s\n\n---STACKTRACE---\n%s</string>
+    <string name="cbs_email_body_format">### DO NOT DELETE BELOW INFORMATION ###\n%s - Crash Report\nTimestamp : %s\n---DEVICE INFO---\n%s\n\n---STACKTRACE---\n%s</string>
     <string name="cbs_toast_no_email_app">No email app found on device.</string>
 </resources>

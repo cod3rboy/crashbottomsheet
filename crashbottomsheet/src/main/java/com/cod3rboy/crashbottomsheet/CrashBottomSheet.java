@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -13,10 +14,13 @@ import androidx.annotation.NonNull;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 public class CrashBottomSheet implements Thread.UncaughtExceptionHandler {
+    static final String LOG_TAG = CrashBottomSheet.class.getSimpleName();
+
     static String EXTRA_STACK_TRACE = "extra_stack_trace";
 
     public interface onCrashReport {
@@ -25,12 +29,24 @@ public class CrashBottomSheet implements Thread.UncaughtExceptionHandler {
 
     private static CrashBottomSheet mSingleton;
 
+    private static Thread.UncaughtExceptionHandler mOldHandler;
+
+    private static long MS_BETWEEN_CRASHES = 3000; // 3 seconds gap after any crash is needed
+    private static final String PREFERENCE_FILE_NAME = "com.cod3rboy.crashbottomsheet";
+    private static final String PREFERENCE_FIELD_NAME = "last_crash_time";
+
     public static void register(Application appContext, onCrashReport reportCallback) {
         if (mSingleton == null) {
             // Registered for first time
             mSingleton = new CrashBottomSheet(appContext, reportCallback);
+            mOldHandler = Thread.getDefaultUncaughtExceptionHandler();
+
+            if (mOldHandler != null && !mOldHandler.getClass().getName().startsWith("com.android.internal.os")) {
+                Log.w(LOG_TAG, "WARNING! Your app has already registered some other custom UncaughtExceptionHandler and CrashBottomSheet is replacing it. You must register CrashBottomSheet before any other custom UncaughtExceptionHandler.");
+            }
+            Thread.setDefaultUncaughtExceptionHandler(mSingleton);
         } else {
-            // Already registered
+            Log.w(LOG_TAG, "CrashBottomSheet is already registered. Nothing to do!");
         }
     }
 
@@ -87,7 +103,6 @@ public class CrashBottomSheet implements Thread.UncaughtExceptionHandler {
     private CrashBottomSheet(Application appContext, onCrashReport callback) {
         mAppContext = appContext;
         mCallback = callback;
-        Thread.setDefaultUncaughtExceptionHandler(this);
     }
 
     onCrashReport getCallback() {
@@ -96,6 +111,11 @@ public class CrashBottomSheet implements Thread.UncaughtExceptionHandler {
 
     @Override
     public void uncaughtException(@NonNull Thread t, @NonNull Throwable e) {
+        if (isErrorLoopPossible()) {
+            if (mOldHandler != null) mOldHandler.uncaughtException(t, e);
+            return;
+        }
+        setCurrentCrashTimestamp();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         e.printStackTrace(new PrintStream(stream));
         String stackTrace = stream.toString();
@@ -109,5 +129,25 @@ public class CrashBottomSheet implements Thread.UncaughtExceptionHandler {
         i.putExtra(EXTRA_STACK_TRACE, stackTrace);
         mAppContext.startActivity(i);
         android.os.Process.killProcess(android.os.Process.myPid());
+        System.exit(10);
+    }
+
+    private boolean isErrorLoopPossible() {
+        long now = new Date().getTime();
+        long lastCrash = getLastCrashTimestamp();
+        return (now - lastCrash) <= MS_BETWEEN_CRASHES;
+    }
+
+    private void setCurrentCrashTimestamp() {
+        Date currentTimeStamp = new Date();
+        mAppContext.getSharedPreferences(PREFERENCE_FILE_NAME, Context.MODE_PRIVATE)
+                .edit()
+                .putLong(PREFERENCE_FIELD_NAME, currentTimeStamp.getTime())
+                .apply();
+    }
+
+    private long getLastCrashTimestamp() {
+        return mAppContext.getSharedPreferences(PREFERENCE_FILE_NAME, Context.MODE_PRIVATE)
+                .getLong(PREFERENCE_FIELD_NAME, 0);
     }
 }

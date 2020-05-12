@@ -1,3 +1,19 @@
+/*
+ * Copyright 2020 Dheeraj Kumar
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.cod3rboy.crashbottomsheet;
 
 import android.app.Application;
@@ -62,7 +78,7 @@ public class CrashBottomSheet implements Thread.UncaughtExceptionHandler {
     /**
      * Method to register {@link CrashBottomSheet} with the application.
      * This method is needed to be called as early as possible during app startup.
-     * You must invoke this method in the constructor of Application Class.
+     * You must invoke this method either in the default constructor or in the onCreate() method of Application Class.
      *
      * @param appContext     Application Context object
      * @param reportCallback Your custom action to invoke when report button is pressed by user in bottom sheet.
@@ -89,7 +105,7 @@ public class CrashBottomSheet implements Thread.UncaughtExceptionHandler {
     /**
      * Method to register {@link CrashBottomSheet} with the application.
      * This method is needed to be called as early as possible during app startup.
-     * You must invoke this method in the constructor of Application Class.
+     * You must invoke this method either in the default constructor or in the onCreate() method of Application Class.
      *
      * @param appContext Application Context object
      */

@@ -14,6 +14,10 @@ This library allows android applications to launch a nice beautiful BottomSheetD
 
 * Minimum SDK >= 19
 
+## Latest Version
+
+[![Latest Version Code](https://jitpack.io/v/dkchalotra/crashbottomsheet.svg)](https://jitpack.io/#dkchalotra/crashbottomsheet)
+
 ## Gradle Setup
 
 ```gradle

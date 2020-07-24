@@ -26,7 +26,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.dkchalotra:crashbottomsheet:v1.0.0'
+    implementation 'com.github.dkchalotra:crashbottomsheet:latest-version-here'
 }
 ```
 
@@ -43,7 +43,7 @@ dependencies {
 <dependency>
     <groupId>com.github.dkchalotra</groupId>
     <artifactId>crashbottomsheet</artifactId>
-    <version>v1.0.0</version>
+    <version>latest-version-here</version>
 </dependency>
 ```
 
@@ -107,7 +107,14 @@ CrashBottomSheet
 <string name="cbs_toast_no_email_app">No email app found on device.</string>
 ```
 
-To set a custom drawable image on CrashBottomSheet, you just need to add a new drawable with name `cbs_drawable` in drawable directory of your application.
+To set a custom drawable image on CrashBottomSheet, create the following theme in styles.xml file of your app.
+
+```xml
+<!--Crash Bottom Sheet Drawable Style-->
+<style name="CBSDrawable">
+    <item name="android:src">@drawable/somedrawable</item>
+</style>
+```
 
 ## CrashBottomSheet - Custom Crash Report Action
 

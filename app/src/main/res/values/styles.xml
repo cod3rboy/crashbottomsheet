@@ -9,4 +9,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!--Crash Bottom Sheet Drawable Style-->
+    <style name="CBSDrawable">
+        <item name="android:src">@drawable/cbs_drawable</item>
+    </style>
 </resources>

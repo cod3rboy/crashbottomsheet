@@ -15,11 +15,11 @@
 
     <ImageView
         android:id="@+id/drawable"
+        style="@style/CBSDrawable"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:contentDescription="@string/cbs_drawable_description"
-        android:src="@drawable/cbs_drawable" />
+        android:contentDescription="@string/cbs_drawable_description" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_title"
